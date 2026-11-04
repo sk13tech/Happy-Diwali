@@ -1,7 +1,7 @@
 import { Coins, Flame, HeartHandshake, Quote, Sparkles } from "lucide-react";
 import Rangoli from "./Rangoli";
 import Reveal from "./Reveal";
-import { MiniFlame } from "./Diya";
+import Marigold from "./Marigold";
 
 const WISHES = [
   {
@@ -45,14 +45,15 @@ export default function Wishes() {
 
       {/* heading */}
       <Reveal className="text-center">
-        <span className="inline-flex items-center gap-2 text-[11px] font-medium tracking-[0.35em] text-rosee-500 uppercase">
-          <MiniFlame className="h-5 w-4" /> दिल से <MiniFlame className="h-5 w-4" />
+        <span className="inline-flex items-center gap-2.5 text-[11px] font-medium tracking-[0.35em] text-rosee-500 uppercase">
+          <Marigold className="sway-slow h-6 w-6" tone="ember" /> दिल से{" "}
+          <Marigold className="sway-slow h-6 w-6" tone="gold" style={{ animationDelay: "1.2s" }} />
         </span>
         <h2 className="font-yatra mt-4 text-4xl text-gold-200 sm:text-5xl">
           दीपावली की <span className="text-shimmer">शुभकामनाएं</span>
         </h2>
-        <p className="mt-3 text-sm tracking-[0.25em] text-gold-200/40 uppercase">
-          Warm wishes · Golden moments
+        <p className="font-desc-en mt-3 text-lg tracking-[0.14em] text-gold-200/50 italic">
+          Warm wishes · golden moments
         </p>
       </Reveal>
 
@@ -70,7 +71,7 @@ export default function Wishes() {
             <br />
             <span className="text-gold-300">मुबारक हो आपको दीपावली का त्योहार।</span>
           </p>
-          <p className="mt-6 text-xs tracking-[0.3em] text-gold-200/40 uppercase">
+          <p className="font-desc-en mt-6 text-base tracking-[0.18em] text-gold-200/45 italic">
             Diyo ki Roshni · Rangoli ke Rang
           </p>
         </div>
@@ -89,7 +90,9 @@ export default function Wishes() {
               <p className="font-hindi relative mt-3 text-[15px] leading-relaxed text-amber-100/85">
                 {w.lineHi}
               </p>
-              <p className="relative mt-3 text-[12px] leading-relaxed text-gold-200/45">{w.lineEn}</p>
+              <p className="font-desc-en relative mt-3 text-[15px] leading-relaxed text-gold-200/50 italic">
+                {w.lineEn}
+              </p>
             </article>
           </Reveal>
         ))}

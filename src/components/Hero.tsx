@@ -1,5 +1,6 @@
 import { ChevronDown, Sparkles } from "lucide-react";
 import Diya, { MiniFlame } from "./Diya";
+import Marigold, { Toran } from "./Marigold";
 import Rangoli from "./Rangoli";
 
 type Props = {
@@ -13,6 +14,11 @@ export default function Hero({ name, fromUrl }: Props) {
       id="top"
       className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden px-5 pt-28 pb-28 text-center"
     >
+      {/* marigold toran swaying across the top */}
+      <div className="sway absolute inset-x-0 top-14 z-[5] px-2">
+        <Toran />
+      </div>
+
       {/* one soft halo — clean, not noisy */}
       <div className="pointer-events-none absolute -top-56 left-1/2 h-[38rem] w-[38rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(255,140,60,0.13),transparent_62%)]" />
       <Rangoli
@@ -71,11 +77,13 @@ export default function Hero({ name, fromUrl }: Props) {
             </p>
             <div className="mt-5 flex items-center justify-center gap-3">
               <span className="h-px w-10 bg-gradient-to-r from-transparent to-gold-500/60" />
+              <Marigold className="sway-slow h-7 w-7" tone="sunset" />
               <MiniFlame className="h-6 w-5" />
+              <Marigold className="sway-slow h-7 w-7" tone="gold" style={{ animationDelay: "1.4s" }} />
               <span className="h-px w-10 bg-gradient-to-l from-transparent to-gold-500/60" />
             </div>
-            <p className="mt-4 text-[13px] tracking-wide text-gold-200/50 sm:text-sm">
-              May the festival of lights fill your home with joy &amp; prosperity
+            <p className="font-desc-en mt-4 text-[17px] tracking-wide text-gold-200/60 italic sm:text-lg">
+              A thousand diyas, one feeling — may your year sparkle with love, laughter &amp; light.
             </p>
           </div>
         </div>

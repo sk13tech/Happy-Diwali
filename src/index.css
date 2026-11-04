@@ -5,6 +5,8 @@
   --font-hindi: "Tiro Devanagari Hindi", Georgia, serif;
   --font-yatra: "Yatra One", "Tiro Devanagari Hindi", serif;
   --font-cinzel: "Cinzel Decorative", Georgia, serif;
+  --font-desc: "Kalam", "Tiro Devanagari Hindi", cursive;
+  --font-desc-en: "Cormorant Garamond", Georgia, serif;
 
   --color-night-950: #07030f;
   --color-night-900: #0b0618;
@@ -235,6 +237,34 @@ svg {
   }
 }
 
+.sway {
+  transform-origin: 50% 0%;
+  animation: sway 9s ease-in-out infinite;
+}
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(-1.4deg);
+  }
+  50% {
+    transform: rotate(1.4deg);
+  }
+}
+
+.sway-slow {
+  transform-origin: 50% 50%;
+  animation: sway-x 11s ease-in-out infinite;
+}
+@keyframes sway-x {
+  0%,
+  100% {
+    transform: rotate(-4deg) translateY(0);
+  }
+  50% {
+    transform: rotate(4deg) translateY(-3px);
+  }
+}
+
 .bounce-soft {
   animation: bounce-soft 2.2s ease-in-out infinite;
 }
@@ -284,6 +314,8 @@ svg {
   .spin-slower-rev,
   .float-y,
   .bounce-soft,
+  .sway,
+  .sway-slow,
   .marquee-track {
     animation: none !important;
   }

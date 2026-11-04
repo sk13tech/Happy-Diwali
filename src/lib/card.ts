@@ -21,6 +21,50 @@ function loadImage(src: string): Promise<HTMLImageElement | null> {
   });
 }
 
+/** Marigold (genda phool) — rings of petals, drawn with rotated ellipses. */
+function drawMarigold(
+  ctx: CanvasRenderingContext2D,
+  cx: number,
+  cy: number,
+  R: number,
+  palette: { outer: string; mid: string; inner: string; core: string }
+) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  // soft halo
+  const halo = ctx.createRadialGradient(0, 0, 0, 0, 0, R * 1.5);
+  halo.addColorStop(0, "rgba(255,160,70,0.4)");
+  halo.addColorStop(1, "rgba(255,160,70,0)");
+  ctx.fillStyle = halo;
+  ctx.beginPath();
+  ctx.arc(0, 0, R * 1.5, 0, Math.PI * 2);
+  ctx.fill();
+
+  const ring = (count: number, r: number, rx: number, ry: number, fill: string, offset: number) => {
+    ctx.fillStyle = fill;
+    for (let i = 0; i < count; i++) {
+      ctx.save();
+      ctx.rotate((Math.PI * 2 * i) / count + offset);
+      ctx.beginPath();
+      ctx.ellipse(0, -r, rx, ry, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+  };
+  ring(16, R * 0.62, R * 0.2, R * 0.34, palette.outer, 0);
+  ring(12, R * 0.44, R * 0.17, R * 0.26, palette.mid, 0.26);
+  ring(9, R * 0.28, R * 0.13, R * 0.18, palette.inner, 0.17);
+  ctx.fillStyle = palette.core;
+  ctx.beginPath();
+  ctx.arc(0, 0, R * 0.16, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = "#ffdf8e";
+  ctx.beginPath();
+  ctx.arc(-R * 0.03, -R * 0.03, R * 0.07, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
 /* ---------------- procedural fallback artwork ---------------- */
 
 function drawBurst(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, hue: string) {
@@ -243,7 +287,7 @@ export async function makeWishCard(rawName: string): Promise<File | null> {
   ctx.fillText("ढेर सारी शुभकामनाएं", W / 2, 410);
   ctx.shadowBlur = 0;
 
-  // divider sparks
+  // divider sparks flanked by marigolds
   ctx.fillStyle = "rgba(255,190,90,0.85)";
   for (let i = -1; i <= 1; i++) {
     const cx2 = W / 2 + i * 56;
@@ -253,6 +297,16 @@ export async function makeWishCard(rawName: string): Promise<File | null> {
     ctx.fillRect(-4, -4, 8, 8);
     ctx.restore();
   }
+  drawMarigold(ctx, W / 2 - 132, 458, 30, { outer: "#f9a03f", mid: "#ffb347", inner: "#ffd76a", core: "#d95d12" });
+  drawMarigold(ctx, W / 2 + 132, 458, 30, { outer: "#f4551f", mid: "#ff7a33", inner: "#ffab52", core: "#b13c08" });
+
+  // festive flower clusters celebrating the frame corners
+  drawMarigold(ctx, 74, 82, 40, { outer: "#f9a03f", mid: "#ffb347", inner: "#ffd76a", core: "#d95d12" });
+  drawMarigold(ctx, 122, 60, 26, { outer: "#f4551f", mid: "#ff7a33", inner: "#ffab52", core: "#b13c08" });
+  drawMarigold(ctx, W - 74, 82, 40, { outer: "#ffb84d", mid: "#ffcf6b", inner: "#ffe9a8", core: "#e07b16" });
+  drawMarigold(ctx, W - 122, 60, 26, { outer: "#f9a03f", mid: "#ffb347", inner: "#ffd76a", core: "#d95d12" });
+  drawMarigold(ctx, 82, H - 84, 34, { outer: "#f4551f", mid: "#ff7a33", inner: "#ffab52", core: "#b13c08" });
+  drawMarigold(ctx, W - 82, H - 84, 34, { outer: "#f9a03f", mid: "#ffb347", inner: "#ffd76a", core: "#d95d12" });
 
   // domain footer
   ctx.fillStyle = "rgba(255,232,190,0.62)";

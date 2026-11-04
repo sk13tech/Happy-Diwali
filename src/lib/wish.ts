@@ -126,5 +126,5 @@ export function buildWishUrl(name: string): string {
 
 /** Message sent along when sharing. */
 export function shareText(name: string, url: string): string {
-  return `✦ शुभ दीपावली ✦\n${sanitizeName(name)} की तरफ से आपके लिए एक ख़ास दिवाली greeting है —\n${url}`;
+  return `✦ शुभ दीपावली ✦\nदीयों की रोशनी और गेंदे की खुशबू के साथ…\nआपके लिए ${sanitizeName(name)} की तरफ से एक ख़ास दिवाली greeting आई है — साथ में खूबसूरत card भी!\n\nखोलिए, और अपने नाम का लिंक भी बनाइए →\n${url}`;
 }

@@ -3,6 +3,7 @@ import { Check, ImageDown, Link2, Loader2, PartyPopper, Share2, Sparkles } from 
 import { buildWishUrl, sanitizeName, shareText, MAX_NAME } from "@/lib/wish";
 import { makeWishCard } from "@/lib/card";
 import Reveal from "./Reveal";
+import Marigold from "./Marigold";
 import { cn } from "@/utils/cn";
 
 function WhatsAppIcon({ className }: { className?: string }) {
@@ -18,6 +19,7 @@ type ShareState = "idle" | "building" | "done";
 export default function LinkGenerator() {
   const [name, setName] = useState("");
   const [shareState, setShareState] = useState<ShareState>("idle");
+  const [waState, setWaState] = useState<ShareState>("idle");
 
   const cleanName = useMemo(() => sanitizeName(name), [name]);
   const url = cleanName ? buildWishUrl(cleanName) : "";
@@ -29,10 +31,31 @@ export default function LinkGenerator() {
     return () => clearTimeout(id);
   }, [shareState]);
 
-  /* WhatsApp — message + link via wa.me */
-  const shareWhatsApp = () => {
-    if (!url) return;
-    window.open(`https://wa.me/?text=${encodeURIComponent(shareText(cleanName, url))}`, "_blank", "noopener");
+  useEffect(() => {
+    if (waState !== "done") return;
+    const id = setTimeout(() => setWaState("idle"), 2200);
+    return () => clearTimeout(id);
+  }, [waState]);
+
+  /* WhatsApp — greeting card + message + link together.
+     wa.me can't carry images, so on devices with the native share sheet
+     (all modern phones) we hand WhatsApp the rendered JPG directly. */
+  const shareWhatsApp = async () => {
+    if (!url || waState === "building") return;
+    setWaState("building");
+    const text = shareText(cleanName, url);
+    try {
+      const file = await makeWishCard(cleanName);
+      if (file && typeof navigator.canShare === "function" && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], text, title: "शुभ दीपावली" });
+      } else {
+        if (file) download(file); // desktop — keep the card too
+        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener");
+      }
+      setWaState("done");
+    } catch {
+      setWaState("idle"); // user dismissed the sheet
+    }
   };
 
   /* Optimized share — festive 16:9 card image + message + link in one tap */
@@ -75,15 +98,21 @@ export default function LinkGenerator() {
   return (
     <section id="create" className="relative mx-auto max-w-6xl scroll-mt-24 px-5 pb-20 sm:px-8">
       <Reveal className="text-center">
-        <span className="inline-flex items-center gap-2 rounded-full border border-gold-500/20 bg-gold-500/[0.06] px-4 py-1.5 text-[11px] font-medium tracking-[0.3em] text-gold-300 uppercase">
+        <span className="inline-flex items-center gap-2.5 rounded-full border border-gold-500/20 bg-gold-500/[0.06] px-4 py-1.5 text-[11px] font-medium tracking-[0.3em] text-gold-300 uppercase">
+          <Marigold className="h-4.5 w-4.5" tone="sunset" />
           <PartyPopper className="h-3.5 w-3.5" />
           अब आपकी बारी
+          <Marigold className="h-4.5 w-4.5" tone="gold" />
         </span>
         <h2 className="font-yatra mt-5 text-4xl text-gold-200 sm:text-5xl">
           अपना <span className="text-shimmer">शुभकामना लिंक</span> बनाएं
         </h2>
-        <p className="font-hindi mx-auto mt-4 max-w-md text-base leading-relaxed text-amber-100/60">
-          नाम लिखिए — greeting card, message और लिंक तीनों तैयार। एक टैप में दोस्तों को भेजिए।
+        <p className="font-desc mx-auto mt-4 max-w-lg text-lg leading-relaxed text-amber-100/70">
+          बस नाम लिखिए — और देखिए जादू! Personalized लिंक, दिल छू लेने वाला संदेश,
+          और एक खूबसूरत greeting card… तीनों एक ही टैप में तैयार।
+        </p>
+        <p className="font-desc-en mt-2 text-base text-gold-200/45 italic">
+          Your name. Your glow. One tap to share it all.
         </p>
       </Reveal>
 
@@ -131,19 +160,30 @@ export default function LinkGenerator() {
 
           {/* actions */}
           <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {/* WhatsApp */}
+            {/* WhatsApp — with card on supported devices */}
             <button
               onClick={shareWhatsApp}
               disabled={!ready}
               className={cn(
                 "inline-flex items-center justify-center gap-2.5 rounded-full px-6 py-3.5 text-sm font-semibold transition-all duration-300",
-                ready
-                  ? "bg-[#25D366] text-[#062b16] shadow-[0_8px_32px_rgba(37,211,102,0.3)] hover:scale-[1.02] hover:shadow-[0_8px_44px_rgba(37,211,102,0.45)] active:scale-95"
-                  : "cursor-not-allowed bg-white/[0.05] text-white/25"
+                !ready && "cursor-not-allowed bg-white/[0.05] text-white/25",
+                ready && waState === "building" && "bg-[#25D366]/80 text-[#062b16]",
+                ready &&
+                  waState === "idle" &&
+                  "bg-[#25D366] text-[#062b16] shadow-[0_8px_32px_rgba(37,211,102,0.3)] hover:scale-[1.02] hover:shadow-[0_8px_44px_rgba(37,211,102,0.45)] active:scale-95",
+                ready && waState === "done" && "bg-emerald-400 text-emerald-950 shadow-[0_8px_32px_rgba(52,211,153,0.35)]"
               )}
             >
-              <WhatsAppIcon className="h-5 w-5" />
-              <span className="font-hindi text-[15px]">WhatsApp पर भेजें</span>
+              {waState === "building" ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : waState === "done" ? (
+                <Check className="h-5 w-5" />
+              ) : (
+                <WhatsAppIcon className="h-5 w-5" />
+              )}
+              <span className="font-hindi text-[15px]">
+                {waState === "building" ? "कार्ड बन रहा है…" : waState === "done" ? "तैयार!" : "WhatsApp पर भेजें"}
+              </span>
             </button>
 
             {/* Share with image card */}
@@ -175,10 +215,12 @@ export default function LinkGenerator() {
             </button>
           </div>
 
-          <p className="font-hindi mt-5 flex items-center justify-center gap-1.5 text-center text-[12px] text-gold-200/40">
-            <ImageDown className="h-3.5 w-3.5 shrink-0 text-gold-500/50" />
-            Share पर 16:9 greeting image + message + लिंक — तीनों एक साथ जाते हैं
-            <Sparkles className="h-3.5 w-3.5 shrink-0 text-gold-500/50" />
+          <p className="font-desc mt-5 flex items-center justify-center gap-1.5 text-center text-[14px] leading-relaxed text-gold-200/45">
+            <ImageDown className="h-4 w-4 shrink-0 text-gold-500/60" />
+            दोनों बटनों से 16:9 greeting card + संदेश + लिंक साथ में जाते हैं —
+            <br className="sm:hidden" />
+            mobile पर WhatsApp के लिए share sheet में WhatsApp चुनिए
+            <Sparkles className="h-4 w-4 shrink-0 text-gold-500/60" />
           </p>
         </div>
       </Reveal>
