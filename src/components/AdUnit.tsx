@@ -119,14 +119,18 @@ export default function AdUnit({ className }: { className?: string }) {
           )}
         >
           {configured ? (
-            <ins
-              className="adsbygoogle block w-full"
-              style={{ display: "block", minHeight: 110 }}
-              data-ad-client={CLIENT}
-              data-ad-slot={SLOT}
-              data-ad-format="auto"
-              data-full-width-responsive="true"
-            />
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6009446949965887"
+     crossorigin="anonymous"></script>
+<!-- Ads1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-6009446949965887"
+     data-ad-slot="3400335638"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
           ) : (
             <div className="flex items-center gap-2.5 text-center">
               <Megaphone className="h-4 w-4 shrink-0 text-gold-400/60" />
