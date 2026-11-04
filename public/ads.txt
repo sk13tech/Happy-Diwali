@@ -1,0 +1,3 @@
+# Replace XXXXXXXXXXXXXXXX with your AdSense publisher ID number.
+# Required by AdSense for this site to be verified for ad serving.
+google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0

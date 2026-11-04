@@ -1,0 +1,290 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-hindi: "Tiro Devanagari Hindi", Georgia, serif;
+  --font-yatra: "Yatra One", "Tiro Devanagari Hindi", serif;
+  --font-cinzel: "Cinzel Decorative", Georgia, serif;
+
+  --color-night-950: #07030f;
+  --color-night-900: #0b0618;
+  --color-night-800: #150a2a;
+  --color-gold-200: #fff3c9;
+  --color-gold-300: #ffe9b0;
+  --color-gold-400: #ffd76a;
+  --color-gold-500: #f8b84e;
+  --color-gold-600: #dd9527;
+  --color-ember-500: #ff7b2e;
+  --color-rosee-500: #ff4d8d;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #07030f;
+  overflow-x: clip;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+/* content-protection: no casual text selection / touch callout / drag */
+body {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+input,
+textarea,
+[data-allow-copy] {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -webkit-touch-callout: default !important;
+}
+img,
+svg {
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+@keyframes fab-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 10px 34px rgba(248, 184, 78, 0.4);
+  }
+  50% {
+    transform: scale(1.035) translateY(-2px);
+    box-shadow: 0 12px 48px rgba(248, 184, 78, 0.65);
+  }
+}
+.fab-breathe {
+  animation: fab-breathe 3.4s ease-in-out infinite;
+}
+
+::selection {
+  background: rgba(248, 184, 78, 0.92);
+  color: #1d0b2f;
+}
+
+::-webkit-scrollbar {
+  width: 9px;
+}
+::-webkit-scrollbar-track {
+  background: #07030f;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(#f8b84e, #8a2740);
+  border-radius: 99px;
+  border: 2px solid #07030f;
+}
+
+/* ---------- Typography effects ---------- */
+
+.text-shimmer {
+  background: linear-gradient(
+    105deg,
+    #a06a1a 0%,
+    #f8b84e 22%,
+    #fff3c9 46%,
+    #ffe9b0 54%,
+    #f8b84e 78%,
+    #a06a1a 100%
+  );
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer-slide 7s linear infinite;
+}
+@keyframes shimmer-slide {
+  to {
+    background-position: 220% center;
+  }
+}
+
+.glow-wrap {
+  filter: drop-shadow(0 0 26px rgba(248, 184, 78, 0.32))
+    drop-shadow(0 0 90px rgba(255, 123, 46, 0.16));
+}
+
+.outline-text {
+  -webkit-text-stroke: 1.5px rgba(248, 184, 78, 0.32);
+  color: transparent;
+}
+
+/* ---------- Entrance / reveal ---------- */
+
+.rise {
+  opacity: 0;
+  animation: rise-in 1.15s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(44px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition:
+    opacity 1s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal.reveal-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Diya flame ---------- */
+
+.flame {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: flame-flicker var(--flame-dur, 2.8s) ease-in-out infinite;
+}
+.flame-inner {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: flame-flicker calc(var(--flame-dur, 2.8s) * 0.72) ease-in-out
+    infinite reverse;
+}
+@keyframes flame-flicker {
+  0%,
+  100% {
+    transform: scale(1, 1) rotate(-1.2deg);
+  }
+  22% {
+    transform: scale(0.95, 1.1) rotate(1.8deg);
+  }
+  45% {
+    transform: scale(1.06, 0.9) rotate(-2deg);
+  }
+  66% {
+    transform: scale(0.97, 1.07) rotate(1.2deg);
+  }
+  84% {
+    transform: scale(1.03, 0.95) rotate(-1.6deg);
+  }
+}
+
+.flame-glow {
+  animation: glow-pulse calc(var(--flame-dur, 2.8s) * 1.25) ease-in-out infinite;
+}
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.95;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* ---------- Marquee ---------- */
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-x var(--marquee-dur, 32s) linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee-x {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------- Ambient ---------- */
+
+.spin-slower {
+  animation: spin-360 90s linear infinite;
+}
+.spin-slower-rev {
+  animation: spin-360 130s linear infinite reverse;
+}
+@keyframes spin-360 {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.float-y {
+  animation: float-y 7s ease-in-out infinite;
+}
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+.bounce-soft {
+  animation: bounce-soft 2.2s ease-in-out infinite;
+}
+@keyframes bounce-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(9px);
+    opacity: 0.4;
+  }
+}
+
+/* ---------- Cards ---------- */
+
+.glass-card {
+  background: linear-gradient(
+    160deg,
+    rgba(255, 233, 176, 0.07),
+    rgba(255, 255, 255, 0.025) 45%,
+    rgba(255, 77, 141, 0.045)
+  );
+  border: 1px solid rgba(248, 184, 78, 0.16);
+  backdrop-filter: blur(14px);
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .rise,
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+  .text-shimmer,
+  .flame,
+  .flame-inner,
+  .flame-glow,
+  .spin-slower,
+  .spin-slower-rev,
+  .float-y,
+  .bounce-soft,
+  .marquee-track {
+    animation: none !important;
+  }
+}
